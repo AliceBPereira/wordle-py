@@ -1,9 +1,20 @@
 import random
+import requests
 from rich.console import Console
 
 console = Console()
 
-banco_de_dados = ['rosas', 'ratos', 'peixe', 'sucos']
+try:
+    url = "https://raw.githubusercontent.com/pythonprobr/palavras/master/palavras.txt"
+    resposta = requests.get(url)
+    todas_as_palavras = resposta.text.splitlines()
+    # Filtra apenas palavras com 5 letras e sem hífens/números
+    banco_de_dados = [p.lower() for p in todas_as_palavras if len(p) == 5 and p.isalpha()]
+    print(f"Banco de dados online carregado com {len(banco_de_dados)} palavras!")
+except Exception as e:
+    print("Falha ao carregar banco de dados online. Usando lista de emergência.")
+    print(f"Erro: {e}")
+    banco_de_dados = ['rosas', 'ratos', 'peixe', 'sucos', 'ideia', 'livro']
 
 def escolher_palavra_aleatoria():
     return random.choice(banco_de_dados)
